@@ -21,15 +21,15 @@ export const TarefaNova = (props: {
 				<Input
 					type={"text"}
 					endAdornment={<InputAdornment position="end">
-						<IconButton onClick={() => props.funcaoAdicionar()}>
+						<IconButton onClick={() => (props.tarefa !== '') && props.funcaoAdicionar() }>
 							<CheckIcon />
 						</IconButton>
 					</InputAdornment>}
 					value={props.tarefa}
 					onChange={(e) => props.funcaoModificar(e.target.value)}
 					autoFocus
-					onKeyDown={(e) => {
-						if (e.key == 'Enter') {
+					onKeyDown={(e) => {						
+						if (e.key == 'Enter' && props.tarefa !== '') {
 							props.funcaoAdicionar();
 						}
 					}} />
