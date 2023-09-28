@@ -6,7 +6,7 @@ import AppTarefas from "./componentes/AppTarefas";
 import { InterfaceTarefa } from "./interfaces/Tarefa";
 
 function App() {
-	const [tarefaNova] = useState("");
+	const [tarefaNova, setTarefaNova] = useState("");
 	const [tarefas, setTarefas] = useState([
 		{ id: 1, titulo: "componentizar gui", realizado: false },
 		{ id: 2, titulo: "montar gui com componentes", realizado: false },
@@ -34,11 +34,21 @@ function App() {
 		setTarefas(novaLista);
 	};
 
+	const handleTarefaAdicionar = () => {
+		setTarefas([
+			...tarefas,
+			{id: 0, titulo: tarefaNova, realizado: false}
+		]);
+		setTarefaNova("");
+	}
+
 	return (
 		<AppLayout>
 			<AppNavBar />
 			<AppTarefas
 				tarefa={tarefaNova}
+				funcaoTarefaNovaModificar={setTarefaNova}
+				funcaoAdicionar={handleTarefaAdicionar}
 				tarefas={tarefas}
 				funcaoApagar={handleTarefaApagar}
 				funcaoFinalizar={handleTarefaFinalizar}
