@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import AppLayout from "./componentes/AppLayout";
 import AppNavBar from "./componentes/AppNavBar";
 import AppTarefas from "./componentes/AppTarefas";
 import { InterfaceTarefa } from "./interfaces/Tarefa";
+import axios from "axios";
 
 function App() {
+	const api = axios.create({ baseURL: "http://localhost:3000/" });
 	const [tarefaNova, setTarefaNova] = useState("");
 	const [tarefas, setTarefas] = useState([
 		{ id: 1, titulo: "componentizar gui", realizado: false },
@@ -13,11 +15,16 @@ function App() {
 		{ id: 3, titulo: "criar a API com método GET", realizado: true },
 	]);
 
+	useEffect(() => {
+		api.get("/tarefas/").then((resposta) => {
+			setTarefas(resposta.data.dados);
+		});
+	});
+
 	const handleTarefaApagar = (tarefaParaExcluir: InterfaceTarefa) => {
-		const novaLista = tarefas.filter(
-			(tarefa) => tarefaParaExcluir.id !== tarefa.id
+		api.delete(`/tarefas/${tarefaParaExcluir.id}`).then((resposta) =>
+			console.log(resposta.data)
 		);
-		setTarefas(novaLista);
 	};
 
 	const handleTarefaFinalizar = (identificador: number) => {
@@ -35,12 +42,11 @@ function App() {
 	};
 
 	const handleTarefaAdicionar = () => {
-		setTarefas([
-			...tarefas,
-			{id: 0, titulo: tarefaNova, realizado: false}
-		]);
-		setTarefaNova("");
-	}
+		api.post("/tarefas/", { titulo: tarefaNova }).then((resposta) => {
+			setTarefas([...tarefas, resposta.data]);
+			setTarefaNova("");
+		});
+	};
 
 	return (
 		<AppLayout>
